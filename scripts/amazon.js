@@ -1,8 +1,9 @@
 const displayProducts = document.getElementById('js-products-grid');
 
 let productsHTML = '';
+// load the  products from the file products.js
 products.forEach((product) => {
-    productsHTML += `
+  productsHTML += `
           <div class="product-container">
         <div class="product-image-container">
           <img class="product-image" src="${product.image}">
@@ -45,10 +46,36 @@ products.forEach((product) => {
           Added
         </div>
 
-        <button class="add-to-cart-button button-primary">
+        <button class="add-to-cart-button button-primary js-add-to-card-button" data-product-id= "${product.id}">
           Add to Cart
         </button>
       </div>
     `;
 });
+// display the products onto the page.
 displayProducts.innerHTML += productsHTML;
+
+document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId;
+
+    // loop to check if the product is already available inside the list?
+    let matchingItem;
+    cards.forEach((item) => {
+      if (productId === item.productId) {
+        matchingItem = item;
+      }
+    });
+
+    if (matchingItem) {
+      matchingItem.quantity++;
+    } else {
+      cards.push({
+        productId,
+        quantity: 1
+      });
+    }
+    console.log(cards);
+  });
+
+});
