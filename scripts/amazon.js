@@ -75,6 +75,12 @@ document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
         quantity: 1
       });
     }
+    let cardsQuantity = 0;
+    cards.forEach((item) => {
+      cardsQuantity += item.quantity;
+    });
+    document.querySelector('.js-card-quantity')
+      .textContent = cardsQuantity;
     console.log(cards);
   });
 
