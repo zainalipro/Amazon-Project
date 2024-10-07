@@ -1,3 +1,6 @@
+import { cards as card } from '../data/cards.js';
+import { products } from '../data/products.js';
+
 const displayProducts = document.getElementById('js-products-grid');
 
 let productsHTML = '';
@@ -61,7 +64,7 @@ document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
 
     // loop to check if the product is already available inside the list?
     let matchingItem;
-    cards.forEach((item) => {
+    card.forEach((item) => {
       if (productId === item.productId) {
         matchingItem = item;
       }
@@ -70,18 +73,17 @@ document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
     if (matchingItem) {
       matchingItem.quantity++;
     } else {
-      cards.push({
+      card.push({
         productId,
         quantity: 1
       });
     }
-    let cardsQuantity = 0;
-    cards.forEach((item) => {
-      cardsQuantity += item.quantity;
+    let cardQuantity = 0;
+    card.forEach((item) => {
+      cardQuantity += item.quantity;
     });
     document.querySelector('.js-card-quantity')
-      .textContent = cardsQuantity;
-    console.log(cards);
+      .textContent = cardQuantity;
   });
 
 });
