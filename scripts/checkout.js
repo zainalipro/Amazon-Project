@@ -1,4 +1,4 @@
-import { card, removeFromCard } from '../data/cards.js';
+import { card, removeFromCard, saveToStorage } from '../data/cards.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -97,8 +97,9 @@ document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
         link.addEventListener('click', () => {
             const { productId } = link.dataset;
-
+            removeFromCard(productId);
             const container = document.querySelector(`.js-card-item-container-${productId}`);
             container.remove();
+
         });
     });
