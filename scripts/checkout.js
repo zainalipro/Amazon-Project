@@ -1,11 +1,10 @@
-import { card } from '../data/cards.js';
+import { card, removeFromCard } from '../data/cards.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
 let showHtml = '';
 card.forEach((cardItem) => {
     const productId = cardItem.productId;
-    console.log(productId);
     let matchingProduct;
 
     for (const product of products) {
@@ -14,7 +13,6 @@ card.forEach((cardItem) => {
             break;
         }
     }
-    console.log(matchingProduct);
 
     let itemInCard = ''
     if (matchingProduct) {
@@ -40,7 +38,7 @@ card.forEach((cardItem) => {
                     <span class="update-quantity-link link-primary">
                         Update
                     </span>
-                    <span class="delete-quantity-link link-primary">
+                    <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                         Delete
                     </span>
                 </div>
@@ -94,3 +92,11 @@ card.forEach((cardItem) => {
 });
 
 document.getElementById('js-order-products-display').innerHTML = showHtml;
+
+document.querySelectorAll('.js-delete-link')
+    .forEach((link) => {
+        link.addEventListener('click', () => {
+            const { productId } = link.dataset;
+            removeFromCard(productId);
+        });
+    });
