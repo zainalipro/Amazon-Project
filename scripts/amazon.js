@@ -1,5 +1,5 @@
 import { products } from '../data/products.js';
-import { card, addToCard } from '../data/cards.js';
+import { addToCard, calculateCartQuantity } from '../data/cards.js';
 import { formatCurrency } from './utils/money.js';
 
 // display the products onto the page.
@@ -62,12 +62,8 @@ displayProducts.innerHTML = productsHTML;
 window.addEventListener('load', updateCardQuantity());
 
 function updateCardQuantity() {
-  let cardQuantity = 0;
-  card.forEach((cardItem) => {
-    cardQuantity += cardItem.quantity;
-  });
   document.querySelector('.js-card-quantity')
-    .textContent = cardQuantity;
+    .textContent = calculateCartQuantity();
 }
 
 

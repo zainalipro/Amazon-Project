@@ -35,3 +35,10 @@ export function removeFromCard(productId) {
 export function saveToStorage() {
     localStorage.setItem('card', JSON.stringify(card));
 }
+export function calculateCartQuantity() {
+    let cardQuantity = 0;
+    card.forEach((cardItem) => {
+        cardQuantity += cardItem.quantity;
+    });
+    return cardQuantity;
+}

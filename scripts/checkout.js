@@ -1,4 +1,4 @@
-import { card, removeFromCard, saveToStorage } from '../data/cards.js';
+import { card, removeFromCard, saveToStorage, calculateCartQuantity } from '../data/cards.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -34,7 +34,7 @@ card.forEach((cardItem) => {
                     <span>
                         Quantity: <span class="quantity-label"> ${cardItem.quantity}</span>
                     </span>
-                    <span class="update-quantity-link link-primary">
+                    <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
                         Update
                     </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
@@ -88,7 +88,10 @@ card.forEach((cardItem) => {
 
 window.addEventListener('load', updateCartQuantity);
 document.getElementById('js-order-products-display').innerHTML = showHtml;
-
+function updateCartQuantity() {
+    document.querySelector('.js-return-to-home-link')
+        .textContent = `${calculateCartQuantity()}`;
+}
 
 document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
@@ -101,12 +104,3 @@ document.querySelectorAll('.js-delete-link')
             saveToStorage();
         });
     });
-
-function updateCartQuantity() {
-    let cardQuantity = 0;
-    card.forEach((cardItem) => {
-        cardQuantity += cardItem.quantity;
-    })
-    document.querySelector('.js-return-to-home-link')
-        .textContent = `${cardQuantity}`;
-}
