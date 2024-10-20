@@ -1,5 +1,5 @@
 import { products } from '../data/products.js';
-import { addToCard } from '../data/cards.js';
+import { card, addToCard } from '../data/cards.js';
 import { formatCurrency } from './utils/money.js';
 
 // display the products onto the page.
@@ -60,10 +60,21 @@ products.forEach((product) => {
 
 displayProducts.innerHTML = productsHTML;
 
+function updateCardQuantity() {
+  let cardQuantity = 0;
+  card.forEach((cardItem) => {
+    cardQuantity += cardItem.quantity;
+  });
+  document.querySelector('.js-card-quantity')
+    .textContent = cardQuantity;
+}
+
+
 // button click event listener
 document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
   button.addEventListener('click', () => {
     const productId = button.dataset.productId;
     addToCard(productId);
+    updateCardQuantity()
   });
 });

@@ -18,17 +18,7 @@ export function addToCard(productId) {
             quantity: 1
         });
     }
-    updateCardQuantity();
     saveToStorage();
-}
-
-function updateCardQuantity() {
-    let cardQuantity = 0;
-    card.forEach((cardItem) => {
-        cardQuantity += cardItem.quantity;
-    });
-    document.querySelector('.js-card-quantity')
-        .textContent = cardQuantity;
 }
 
 export function removeFromCard(productId) {

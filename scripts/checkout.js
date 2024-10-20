@@ -14,9 +14,8 @@ card.forEach((cardItem) => {
         }
     }
 
-    let itemInCard = ''
     if (matchingProduct) {
-        itemInCard = `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
+        showHtml += `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
     <div class="delivery-date">
         Delivery date: Tuesday, June 21
     </div>
@@ -85,13 +84,11 @@ card.forEach((cardItem) => {
     </div >
 </div > `
     }
-    else {
-        itemInCard = 'Sorry not products inside the card';
-    }
-    showHtml += itemInCard;
 });
 
+window.addEventListener('load', updateCartQuantity);
 document.getElementById('js-order-products-display').innerHTML = showHtml;
+
 
 document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
@@ -100,6 +97,16 @@ document.querySelectorAll('.js-delete-link')
             removeFromCard(productId);
             const container = document.querySelector(`.js-card-item-container-${productId}`);
             container.remove();
-
+            updateCartQuantity();
+            saveToStorage();
         });
     });
+
+function updateCartQuantity() {
+    let cardQuantity = 0;
+    card.forEach((cardItem) => {
+        cardQuantity += cardItem.quantity;
+    })
+    document.querySelector('.js-return-to-home-link')
+        .textContent = `${cardQuantity}`;
+}
