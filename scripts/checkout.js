@@ -104,3 +104,9 @@ document.querySelectorAll('.js-delete-link')
             saveToStorage();
         });
     });
+document.querySelectorAll('.js-update-link').forEach((link) => {
+    link.addEventListener('click', () => {
+        const { productId } = link.dataset;
+        console.log(productId);
+    });
+})
