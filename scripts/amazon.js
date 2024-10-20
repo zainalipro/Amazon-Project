@@ -59,6 +59,7 @@ products.forEach((product) => {
 });
 
 displayProducts.innerHTML = productsHTML;
+window.addEventListener('load', updateCardQuantity());
 
 function updateCardQuantity() {
   let cardQuantity = 0;
