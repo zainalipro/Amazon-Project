@@ -34,8 +34,14 @@ card.forEach((cardItem) => {
                     <span>
                         Quantity: <span class="quantity-label"> ${cardItem.quantity}</span>
                     </span>
-                    <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
+
+                    <span class="link-primary js-update-link" data-product-id="${matchingProduct.id}">
                         Update
+                            <!--Updating the values-->
+                        <span class="js-update-quantity-${matchingProduct.id} not-show">
+                            <input class="quantity-input" type="number">
+                            <span class="save-quantity-link link-primary ">Save</span>
+                        </span>
                     </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                         Delete
@@ -86,6 +92,8 @@ card.forEach((cardItem) => {
     }
 });
 
+// load the products when the window/ browser is loaded.
+
 window.addEventListener('load', updateCartQuantity);
 document.getElementById('js-order-products-display').innerHTML = showHtml;
 function updateCartQuantity() {
@@ -93,6 +101,8 @@ function updateCartQuantity() {
         .textContent = `${calculateCartQuantity()}`;
 }
 
+
+// delete the item for the card when clicking to the delete link
 document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
         link.addEventListener('click', () => {
@@ -104,9 +114,16 @@ document.querySelectorAll('.js-delete-link')
             saveToStorage();
         });
     });
+
+// updating the quantity of the products.
 document.querySelectorAll('.js-update-link').forEach((link) => {
     link.addEventListener('click', () => {
         const { productId } = link.dataset;
-        console.log(productId);
+
+        const container = document.querySelector(`.js-update-quantity-${productId}`);
+        container.classList.remove('not-show');
+
+
+
     });
 })
