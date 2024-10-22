@@ -32,17 +32,17 @@ card.forEach((cardItem) => {
                 </div>
                 <div class="product-quantity">
                     <span>
-                        Quantity: <span class="quantity-label"> ${cardItem.quantity}</span>
+                        Quantity: <span class="quantity-label js-update-card-quantity-${matchingProduct.id}"> ${cardItem.quantity}</span>
                     </span>
 
                     <span class="link-primary js-update-link" data-product-id="${matchingProduct.id}">
                         Update
-                            <!--Updating the values-->
+                    </span>
+                     <!--Updating the values-->
                         <span class="js-update-quantity-${matchingProduct.id} not-show">
                             <input class="quantity-input" type="number">
-                            <span class="save-quantity-link link-primary ">Save</span>
+                            <span class="save-quantity-link link-primary">Save</span>
                         </span>
-                    </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                         Delete
                     </span>
@@ -120,9 +120,23 @@ document.querySelectorAll('.js-update-link').forEach((link) => {
     link.addEventListener('click', () => {
         const { productId } = link.dataset;
 
+        // showing the save and input into the product card
         const container = document.querySelector(`.js-update-quantity-${productId}`);
         container.classList.remove('not-show');
 
+        // disappearing the quantity and update link
+        link.classList.add('not-show');
+        const quantityNumber = document.querySelector(`.js-update-card-quantity-${productId}`);
+        quantityNumber.classList.add('not-show');
+
+        // action for save button
+        document.querySelectorAll('.save-quantity-link').forEach((saveLink) => {
+            saveLink.addEventListener('click', () => {
+                container.classList.add('not-show');
+                link.classList.remove('not-show');
+                quantityNumber.classList.remove('not-show');
+            });
+        });
 
 
     });
