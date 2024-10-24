@@ -1,4 +1,4 @@
-import { card, removeFromCard, saveToStorage, calculateCartQuantity } from '../data/cards.js';
+import { card, removeFromCard, saveToStorage, calculateCartQuantity, updateQuantity } from '../data/cards.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -40,7 +40,7 @@ card.forEach((cardItem) => {
                     </span>
                      <!--Updating the values-->
                         <span class="js-update-quantity-${matchingProduct.id} not-show">
-                            <input class="quantity-input" type="number">
+                            <input class="quantity-input quantity-input-${matchingProduct.id}" type="number">
                             <span class="save-quantity-link link-primary">Save</span>
                         </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
@@ -115,29 +115,49 @@ document.querySelectorAll('.js-delete-link')
         });
     });
 
-// updating the quantity of the products.
+// Updating the quantity of the products.
 document.querySelectorAll('.js-update-link').forEach((link) => {
     link.addEventListener('click', () => {
         const { productId } = link.dataset;
 
-        // showing the save and input into the product card
+        // Showing the save and input into the product card
         const container = document.querySelector(`.js-update-quantity-${productId}`);
         container.classList.remove('not-show');
 
-        // disappearing the quantity and update link
+        // Disappearing the quantity and update link
         link.classList.add('not-show');
         const quantityNumber = document.querySelector(`.js-update-card-quantity-${productId}`);
         quantityNumber.classList.add('not-show');
 
-        // action for save button
-        document.querySelectorAll('.save-quantity-link').forEach((saveLink) => {
-            saveLink.addEventListener('click', () => {
-                container.classList.add('not-show');
-                link.classList.remove('not-show');
-                quantityNumber.classList.remove('not-show');
-            });
+        // Action for save button
+        const saveLink = container.querySelector('.save-quantity-link');
+        const quantityInput = document.querySelector(`.quantity-input-${productId}`);
+
+        function saveFunc() {
+            container.classList.add('not-show');
+            // Displaying the save and input button
+            link.classList.remove('not-show');
+            quantityNumber.classList.remove('not-show');
+
+            // Getting the input quantity number from the card
+            const newQuantity = Number(quantityInput.value);
+
+            if (newQuantity > 0 && newQuantity <= 1000) {
+                // Saving and displaying the card quantity
+                updateQuantity(newQuantity, productId);
+                quantityNumber.textContent = newQuantity;
+                updateCartQuantity();
+            }
+        }
+
+        // Add click event for save link
+        saveLink.addEventListener('click', saveFunc);
+
+        // Add keypress event for the quantity input field
+        quantityInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                saveFunc();
+            }
         });
-
-
     });
-})
+});

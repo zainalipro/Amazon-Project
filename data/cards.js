@@ -42,3 +42,12 @@ export function calculateCartQuantity() {
     });
     return cardQuantity;
 }
+export function updateQuantity(newQuantity, productId) {
+    card.forEach((cardItem) => {
+        if (cardItem.productId === productId) {
+            cardItem.quantity = newQuantity;
+        }
+    });
+    saveToStorage();
+
+}
