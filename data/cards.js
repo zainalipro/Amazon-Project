@@ -65,3 +65,19 @@ export function updateQuantity(newQuantity, productId) {
     saveToStorage();
 
 }
+
+export function updateDeliveryOption(productId, deliveryOptionId) {
+    // let matchingItem;
+    // checking  if the product is already in the cart.
+    card.forEach((cardItem) => {
+        if (productId === cardItem.productId) {
+            cardItem.deliveryOptionId = deliveryOptionId;
+        }
+    });
+    // matchingItem.deliveryOptionId = deliveryOptionId;
+    saveToStorage();
+}
+
+export function removeCardItems() {
+    localStorage.removeItem('card');
+}
