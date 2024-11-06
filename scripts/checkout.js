@@ -5,41 +5,42 @@ import { formatCurrency } from './utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
 import { deliveryOptions } from "../data/deliveryOptions.js";
 
-// Start generating the HTML on the page
-let showHtml = '';
-card.forEach((cardItem) => {
-    const { productId } = cardItem;
-    let matchingProduct;
+function renderOrderSummary() {
+    // Start generating the HTML on the page
+    let showHtml = '';
+    card.forEach((cardItem) => {
+        const { productId } = cardItem;
+        let matchingProduct;
 
-    // Check for matching product
-    products.forEach((product) => {
-        if (product.id === productId) {
-            matchingProduct = product;
+        // Check for matching product
+        products.forEach((product) => {
+            if (product.id === productId) {
+                matchingProduct = product;
+            }
+        });
+
+        const deliveryOptionId = Number(cardItem.deliveryOptionId);
+        // let deliveryOption = deliveryOptions.find((option) => option.id === deliveryOptionId);
+        let deliveryOptionGet;
+        deliveryOptions.forEach((option) => {
+            if (option.id === deliveryOptionId) {
+                deliveryOptionGet = option;
+            }
+        });
+        // Prevent error by checking if deliveryOption exists
+        const today = dayjs();
+        let deliveryDate;
+        let dateString = 'N/A'; // Set a default string if no delivery date available
+
+        if (deliveryOptionGet) {
+            deliveryDate = today.add(deliveryOptionGet.deliveryDays, 'days');
+            dateString = deliveryDate.format('dddd, MMMM D');
+        } else {
+            console.warn(`Delivery option not found for item with productId: ${productId}`);
         }
-    });
 
-    const deliveryOptionId = Number(cardItem.deliveryOptionId);
-    // let deliveryOption = deliveryOptions.find((option) => option.id === deliveryOptionId);
-    let deliveryOptionGet;
-    deliveryOptions.forEach((option) => {
-        if (option.id === deliveryOptionId) {
-            deliveryOptionGet = option;
-        }
-    });
-    // Prevent error by checking if deliveryOption exists
-    const today = dayjs();
-    let deliveryDate;
-    let dateString = 'N/A'; // Set a default string if no delivery date available
-
-    if (deliveryOptionGet) {
-        deliveryDate = today.add(deliveryOptionGet.deliveryDays, 'days');
-        dateString = deliveryDate.format('dddd, MMMM D');
-    } else {
-        console.warn(`Delivery option not found for item with productId: ${productId}`);
-    }
-
-    if (matchingProduct) {
-        showHtml += `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
+        if (matchingProduct) {
+            showHtml += `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
             <div class="delivery-date">
                 Delivery date: ${dateString}
             </div>
@@ -80,29 +81,29 @@ card.forEach((cardItem) => {
                 </div>
             </div>
         </div>`;
-    }
-});
+        }
+    });
 
 
-// function to create the delivery options
-function deliveryOptionHtml(matchingProduct, cardItem) {
-    let html = '';
-    deliveryOptions.forEach((deliveryOption) => {
-        const today = dayjs();
-        const deliveryDate = today.add(
-            deliveryOption.deliveryDays,
-            'days');
-        const dateString = deliveryDate.format('dddd, MMMM D');
+    // function to create the delivery options
+    function deliveryOptionHtml(matchingProduct, cardItem) {
+        let html = '';
+        deliveryOptions.forEach((deliveryOption) => {
+            const today = dayjs();
+            const deliveryDate = today.add(
+                deliveryOption.deliveryDays,
+                'days');
+            const dateString = deliveryDate.format('dddd, MMMM D');
 
-        const priceString = deliveryOption.
-            priceCents === 0
-            ? 'Free'
-            : `${formatCurrency(deliveryOption.priceCents)} -`;
+            const priceString = deliveryOption.
+                priceCents === 0
+                ? 'Free'
+                : `${formatCurrency(deliveryOption.priceCents)} -`;
 
-        const isChecked = (Number(cardItem.deliveryOptionId) === deliveryOption.id);
+            const isChecked = (Number(cardItem.deliveryOptionId) === deliveryOption.id);
 
-        html +=
-            `<div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}">
+            html +=
+                `<div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}">
             <input type="radio"
             class="delivery-option-input" name="delivery-option-${matchingProduct.id}"
             ${isChecked ? 'checked' : ''}
@@ -117,85 +118,88 @@ function deliveryOptionHtml(matchingProduct, cardItem) {
                 </div>
         </div>
         `;
-    });
-    return html;
-}
+        });
+        return html;
+    }
 
 
 
-// load the products when the window/ browser is loaded.
+    // load the products when the window/ browser is loaded.
 
-window.addEventListener('load', updateCartQuantity);
-document.getElementById('js-order-products-display').innerHTML = showHtml;
-function updateCartQuantity() {
-    document.querySelector('.js-return-to-home-link')
-        .textContent = `${calculateCartQuantity()}`;
-}
+    window.addEventListener('load', updateCartQuantity);
+    document.getElementById('js-order-products-display').innerHTML = showHtml;
+    function updateCartQuantity() {
+        document.querySelector('.js-return-to-home-link')
+            .textContent = `${calculateCartQuantity()}`;
+    }
 
-// delete the item for the card when clicking to the delete link
-document.querySelectorAll('.js-delete-link')
-    .forEach((link) => {
+    // delete the item for the card when clicking to the delete link
+    document.querySelectorAll('.js-delete-link')
+        .forEach((link) => {
+            link.addEventListener('click', () => {
+                const { productId } = link.dataset;
+                removeFromCard(productId);
+                const container = document.querySelector(`.js-card-item-container-${productId}`);
+                container.remove();
+                updateCartQuantity();
+                saveToStorage();
+            });
+        });
+
+    // Updating the quantity of the products.
+    document.querySelectorAll('.js-update-link').forEach((link) => {
         link.addEventListener('click', () => {
             const { productId } = link.dataset;
-            removeFromCard(productId);
-            const container = document.querySelector(`.js-card-item-container-${productId}`);
-            container.remove();
-            updateCartQuantity();
-            saveToStorage();
+
+            // Showing the save and input into the product card
+            const container = document.querySelector(`.js-update-quantity-${productId}`);
+            container.classList.remove('not-show');
+
+            // Disappearing the quantity and update link
+            link.classList.add('not-show');
+            const quantityNumber = document.querySelector(`.js-update-card-quantity-${productId}`);
+            quantityNumber.classList.add('not-show');
+
+            // Action for save button
+            const saveLink = container.querySelector('.save-quantity-link');
+            const quantityInput = document.querySelector(`.quantity-input-${productId}`);
+
+            function saveFunc() {
+                container.classList.add('not-show');
+                // Displaying the save and input button
+                link.classList.remove('not-show');
+                quantityNumber.classList.remove('not-show');
+
+                // Getting the input quantity number from the card
+                const newQuantity = Number(quantityInput.value);
+
+                if (newQuantity > 0 && newQuantity <= 1000) {
+                    // Saving and displaying the card quantity
+                    updateQuantity(newQuantity, productId);
+                    quantityNumber.textContent = newQuantity;
+                    updateCartQuantity();
+                }
+            }
+
+            // Add click event for save link
+            saveLink.addEventListener('click', saveFunc);
+
+            // Add keypress event for the quantity input field
+            quantityInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    saveFunc();
+                }
+            });
         });
     });
 
-// Updating the quantity of the products.
-document.querySelectorAll('.js-update-link').forEach((link) => {
-    link.addEventListener('click', () => {
-        const { productId } = link.dataset;
-
-        // Showing the save and input into the product card
-        const container = document.querySelector(`.js-update-quantity-${productId}`);
-        container.classList.remove('not-show');
-
-        // Disappearing the quantity and update link
-        link.classList.add('not-show');
-        const quantityNumber = document.querySelector(`.js-update-card-quantity-${productId}`);
-        quantityNumber.classList.add('not-show');
-
-        // Action for save button
-        const saveLink = container.querySelector('.save-quantity-link');
-        const quantityInput = document.querySelector(`.quantity-input-${productId}`);
-
-        function saveFunc() {
-            container.classList.add('not-show');
-            // Displaying the save and input button
-            link.classList.remove('not-show');
-            quantityNumber.classList.remove('not-show');
-
-            // Getting the input quantity number from the card
-            const newQuantity = Number(quantityInput.value);
-
-            if (newQuantity > 0 && newQuantity <= 1000) {
-                // Saving and displaying the card quantity
-                updateQuantity(newQuantity, productId);
-                quantityNumber.textContent = newQuantity;
-                updateCartQuantity();
-            }
-        }
-
-        // Add click event for save link
-        saveLink.addEventListener('click', saveFunc);
-
-        // Add keypress event for the quantity input field
-        quantityInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                saveFunc();
-            }
+    document.querySelectorAll('.js-delivery-option')
+        .forEach((element) => {
+            element.addEventListener('click', () => {
+                const { productId, deliveryOptionId } = element.dataset;
+                updateDeliveryOption(productId, deliveryOptionId);
+                renderOrderSummary();
+            });
         });
-    });
-});
-
-document.querySelectorAll('.js-delivery-option')
-    .forEach((element) => {
-        element.addEventListener('click', () => {
-            const { productId, deliveryOptionId } = element.dataset;
-            updateDeliveryOption(productId, deliveryOptionId);
-        });
-    })
+}
+renderOrderSummary();
