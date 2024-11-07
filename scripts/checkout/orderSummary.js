@@ -4,6 +4,8 @@ import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
+import renderPaymentSummary from "./paymentSummary.js"
+
 
 export default function renderOrderSummary() {
     // Start generating the HTML on the page
@@ -104,10 +106,7 @@ export default function renderOrderSummary() {
         return html;
     }
 
-
-
     // load the products when the window/ browser is loaded.
-
     window.addEventListener('load', updateCartQuantity);
     document.getElementById('js-order-products-display').innerHTML = showHtml;
     function updateCartQuantity() {
@@ -125,6 +124,7 @@ export default function renderOrderSummary() {
                 container.remove();
                 updateCartQuantity();
                 saveToStorage();
+                renderPaymentSummary();
             });
         });
 
@@ -181,6 +181,7 @@ export default function renderOrderSummary() {
                 const { productId, deliveryOptionId } = element.dataset;
                 updateDeliveryOption(productId, deliveryOptionId);
                 renderOrderSummary();
+                renderPaymentSummary();
             });
         });
 }
