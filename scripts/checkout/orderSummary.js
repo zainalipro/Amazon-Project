@@ -1,43 +1,25 @@
 // Importing the necessary files 
 import { card, removeFromCard, saveToStorage, calculateCartQuantity, updateQuantity, updateDeliveryOption, removeCardItems } from '../../data/cards.js';
-import { products } from '../../data/products.js';
+import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 
 export default function renderOrderSummary() {
     // Start generating the HTML on the page
     let showHtml = '';
     card.forEach((cardItem) => {
+        // getting the matching product
         const { productId } = cardItem;
-        let matchingProduct;
+        const matchingProduct = getProduct(productId);
 
-        // Check for matching product
-        products.forEach((product) => {
-            if (product.id === productId) {
-                matchingProduct = product;
-            }
-        });
-
+        // getting the delivery option
         const deliveryOptionId = Number(cardItem.deliveryOptionId);
-        // let deliveryOption = deliveryOptions.find((option) => option.id === deliveryOptionId);
-        let deliveryOptionGet;
-        deliveryOptions.forEach((option) => {
-            if (option.id === deliveryOptionId) {
-                deliveryOptionGet = option;
-            }
-        });
-        // Prevent error by checking if deliveryOption exists
-        const today = dayjs();
-        let deliveryDate;
-        let dateString = 'N/A'; // Set a default string if no delivery date available
+        const deliveryOptionGet = getDeliveryOption(deliveryOptionId);
 
-        if (deliveryOptionGet) {
-            deliveryDate = today.add(deliveryOptionGet.deliveryDays, 'days');
-            dateString = deliveryDate.format('dddd, MMMM D');
-        } else {
-            console.warn(`Delivery option not found for item with productId: ${productId}`);
-        }
+        const today = dayjs();
+        const deliveryDate = today.add(deliveryOptionGet.deliveryDays, 'days');
+        const dateString = deliveryDate.format('dddd, MMMM D');
 
         if (matchingProduct) {
             showHtml += `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
