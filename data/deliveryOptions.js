@@ -29,9 +29,27 @@ export function getDeliveryOption(deliveryOptionId) {
     return deliveryOption || deliveryOptions[0];
 }
 
+
+function isWeekend(date) {
+    const formatDate = date.format('dddd');
+    if (formatDate === 'Sunday' || formatDate === 'Saturday')
+        return true;
+
+    return false;
+}
+
 export function calculateDeliveryDate(deliveryOption) {
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+
+    let deliveryDate = dayjs();
+    let dayCounter = deliveryOption.deliveryDays;
+    while (dayCounter > 0) {
+        deliveryDate = deliveryDate.add(1, 'day');
+        // if their is weekend then skip this step.
+        if (!isWeekend(deliveryDate)) {
+            dayCounter--;
+        }
+    }
+    const dateString = deliveryDate.format(
+        'dddd, MMMM D');
     return dateString;
 }

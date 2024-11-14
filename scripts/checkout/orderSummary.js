@@ -49,6 +49,7 @@ export default function renderOrderSummary() {
                             <input class="quantity-input quantity-input-${matchingProduct.id}" type="number" autofocus>
                             <span class="save-quantity-link link-primary">Save</span>
                         </span>
+                        
                         <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                             Delete
                         </span>
