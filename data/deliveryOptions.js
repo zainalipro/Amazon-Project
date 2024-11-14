@@ -1,3 +1,5 @@
+import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
+
 export const deliveryOptions = [
     {
         id: 1,
@@ -25,4 +27,11 @@ export function getDeliveryOption(deliveryOptionId) {
         }
     });
     return deliveryOption || deliveryOptions[0];
+}
+
+export function calculateDeliveryDate(deliveryOption) {
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+    const dateString = deliveryDate.format('dddd, MMMM D');
+    return dateString;
 }

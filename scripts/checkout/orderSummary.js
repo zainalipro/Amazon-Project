@@ -4,7 +4,8 @@ import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
-import renderPaymentSummary from "./paymentSummary.js"
+import renderPaymentSummary from "./paymentSummary.js";
+import { calculateDeliveryDate } from "../../data/deliveryOptions.js"
 
 
 export default function renderOrderSummary() {
@@ -17,16 +18,13 @@ export default function renderOrderSummary() {
 
         // getting the delivery option
         const deliveryOptionId = Number(cardItem.deliveryOptionId);
-        const deliveryOptionGet = getDeliveryOption(deliveryOptionId);
-
-        const today = dayjs();
-        const deliveryDate = today.add(deliveryOptionGet.deliveryDays, 'days');
-        const dateString = deliveryDate.format('dddd, MMMM D');
+        const deliveryOption = getDeliveryOption(deliveryOptionId);
+        const dataString = calculateDeliveryDate(deliveryOption);
 
         if (matchingProduct) {
             showHtml += `<div class="cart-item-container js-card-item-container-${matchingProduct.id}">
             <div class="delivery-date">
-                Delivery date: ${dateString}
+                Delivery date: ${dataString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -73,11 +71,7 @@ export default function renderOrderSummary() {
     function deliveryOptionHtml(matchingProduct, cardItem) {
         let html = '';
         deliveryOptions.forEach((deliveryOption) => {
-            const today = dayjs();
-            const deliveryDate = today.add(
-                deliveryOption.deliveryDays,
-                'days');
-            const dateString = deliveryDate.format('dddd, MMMM D');
+            const dateString = calculateDeliveryDate(deliveryOption);
 
             const priceString = deliveryOption.
                 priceCents === 0
@@ -120,11 +114,9 @@ export default function renderOrderSummary() {
             link.addEventListener('click', () => {
                 const { productId } = link.dataset;
                 removeFromCard(productId);
-                const container = document.querySelector(`.js-card-item-container-${productId}`);
-                container.remove();
-                updateCartQuantity();
-                saveToStorage();
+                renderOrderSummary();
                 renderPaymentSummary();
+                updateCartQuantity();
             });
         });
 
@@ -159,6 +151,7 @@ export default function renderOrderSummary() {
                     // Saving and displaying the card quantity
                     updateQuantity(newQuantity, productId);
                     quantityNumber.textContent = newQuantity;
+                    renderPaymentSummary();
                     updateCartQuantity();
                 }
             }
