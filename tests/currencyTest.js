@@ -7,7 +7,7 @@ console.log(`
     Test Suite: format Currency\n
     ---------------------------`);
 
-console.log('Test 1: formatCurrency(2000)')
+console.log('Test 1: formatCurrency(2295)')
 // test case 1
 if (formatCurrency(2295) === "$22.95") {
     console.log('pass');
