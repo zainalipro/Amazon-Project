@@ -1,15 +1,16 @@
 class Card {
     cardItems;
-    localStorageKey;
+    // property with the #(hash) is called the private property
+    #localStorageKey;
 
     constructor(storageKey) {
-        this.localStorageKey = storageKey;
-        this.loadFromStorage();
+        this.#localStorageKey = storageKey;
+        this.#loadFromStorage();
 
     }
-
-    loadFromStorage() {
-        this.cardItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || [
+    // we also have private method the with the # symbol is called the private method
+    #loadFromStorage() {
+        this.cardItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [
             {
                 productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
                 quantity: 2,
@@ -56,7 +57,7 @@ class Card {
     }
 
     saveToStorage() {
-        localStorage.setItem(this.localStorageKey, JSON.stringify(this.cardItems));
+        localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cardItems));
     }
     calculateCartQuantity() {
         let cardQuantity = 0;
@@ -86,7 +87,7 @@ class Card {
     }
 
     removeCardItems() {
-        localStorage.removeItem(this.localStorageKey);
+        localStorage.removeItem(this.#localStorageKey);
     }
 };
 
