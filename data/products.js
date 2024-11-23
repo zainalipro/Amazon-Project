@@ -718,3 +718,29 @@ export function getProduct(productId) {
   });
   return matchingProduct;
 }
+/*
+// Built in classes like Date()
+const date = new Date();
+console.log(date);
+console.log(date.toLocaleTimeString());
+*/
+
+// Use of this keyword
+// outside the object the this is undefined
+/*
+console.log(this);
+function logThis() {
+  console.log(this);
+}
+logThis();
+*/
+// Inside the object the this is the object
+const person = {
+  name: 'John',
+  age: 30,
+  logThis: function () {
+    console.log(this);
+  }
+}
+console.log(person.name)
+person.logThis();
