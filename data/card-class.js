@@ -1,4 +1,4 @@
-class Card {
+export class Card {
     cardItems;
     // property with the #(hash) is called the private property
     #localStorageKey;
@@ -89,9 +89,4 @@ class Card {
     removeCardItems() {
         localStorage.removeItem(this.#localStorageKey);
     }
-};
-
-const card = new Card('card-oop');
-const businessCart = new Card('card-business');
-console.log(card);
-console.log(businessCart);
+}
