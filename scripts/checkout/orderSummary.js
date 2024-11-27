@@ -1,5 +1,6 @@
 // Importing the necessary files 
-import { card, removeFromCard, saveToStorage, calculateCartQuantity, updateQuantity, updateDeliveryOption, removeCardItems } from '../../data/cards.js';
+// import { card, removeFromCard, saveToStorage, calculateCartQuantity, updateQuantity, updateDeliveryOption, removeCardItems } from '../../data/cards.js';
+import { card } from '../../data/card.js';
 import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
@@ -7,12 +8,10 @@ import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.j
 import renderPaymentSummary from "./paymentSummary.js";
 import { calculateDeliveryDate } from "../../data/deliveryOptions.js";
 
-import { Card as CardClass } from '../../data/card-class.js';
-
 export default function renderOrderSummary() {
     // Start generating the HTML on the page
     let showHtml = '';
-    card.forEach((cardItem) => {
+    card.cardItems.forEach((cardItem) => {
         // getting the matching product
         const { productId } = cardItem;
         const matchingProduct = getProduct(productId);
@@ -107,7 +106,7 @@ export default function renderOrderSummary() {
     document.getElementById('js-order-products-display').innerHTML = showHtml;
     function updateCartQuantity() {
         document.querySelector('.js-return-to-home-link')
-            .textContent = `${calculateCartQuantity()}`;
+            .textContent = `${card.calculateCartQuantity()}`;
     }
 
     // delete the item for the card when clicking to the delete link
@@ -115,7 +114,7 @@ export default function renderOrderSummary() {
         .forEach((link) => {
             link.addEventListener('click', () => {
                 const { productId } = link.dataset;
-                removeFromCard(productId);
+                card.removeFromCard(productId);
                 renderOrderSummary();
                 renderPaymentSummary();
                 updateCartQuantity();
@@ -151,7 +150,7 @@ export default function renderOrderSummary() {
 
                 if (newQuantity > 0 && newQuantity <= 1000) {
                     // Saving and displaying the card quantity
-                    updateQuantity(newQuantity, productId);
+                    card.updateQuantity(newQuantity, productId);
                     quantityNumber.textContent = newQuantity;
                     renderPaymentSummary();
                     updateCartQuantity();
@@ -174,7 +173,7 @@ export default function renderOrderSummary() {
         .forEach((element) => {
             element.addEventListener('click', () => {
                 const { productId, deliveryOptionId } = element.dataset;
-                updateDeliveryOption(productId, deliveryOptionId);
+                card.updateDeliveryOption(productId, deliveryOptionId);
                 renderOrderSummary();
                 renderPaymentSummary();
             });

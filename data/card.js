@@ -1,5 +1,3 @@
-// Create the template of the card with class
-
 class Card {
     cardItems;
     // property with the #(hash) is called the private property
@@ -12,18 +10,7 @@ class Card {
     }
     // we also have private method the with the # symbol is called the private method
     #loadFromStorage() {
-        this.cardItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [
-            {
-                productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
-                quantity: 2,
-                deliveryOptionId: 1
-            },
-            {
-                productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-                quantity: 1,
-                deliveryOptionId: 2
-            }
-        ];
+        this.cardItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
     }
     // add to card function
     addToCard(productId) {
@@ -93,5 +80,5 @@ class Card {
     }
 }
 
-const card = new Card('new-card');
-export default card;
+const card = new Card('card');
+export { card };

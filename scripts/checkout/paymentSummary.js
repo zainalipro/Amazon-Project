@@ -4,7 +4,8 @@ Steps to solve the problem in JS which is also called MVC
 2. Generate the Data (View)
 3. Make it Interactive (Controller)
 */
-import { card, calculateCartQuantity } from "../../data/cards.js";
+// import { card, calculateCartQuantity } from "../../data/cards.js";
+import { card } from "../../data/card.js";
 import { getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
@@ -12,7 +13,7 @@ import { getDeliveryOption } from "../../data/deliveryOptions.js";
 export default function renderPaymentSummary() {
   let productPriceCents = 0;
   let shippingPriceCents = 0;
-  card.forEach((cartItem) => {
+  card.cardItems.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
     productPriceCents += product.priceCents * cartItem.quantity;
     const charges = getDeliveryOption(Number(cartItem.deliveryOptionId));
@@ -27,7 +28,7 @@ export default function renderPaymentSummary() {
           Order Summary
         </div>
         <div class="payment-summary-row">
-          <div>Items (${calculateCartQuantity()}):</div>
+          <div>Items (${card.calculateCartQuantity()}):</div>
           <div class="payment-summary-money">
             ${formatCurrency(productPriceCents)}
           </div>

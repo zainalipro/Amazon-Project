@@ -1,6 +1,6 @@
 import { products } from '../data/products.js';
-import { addToCard, calculateCartQuantity } from '../data/cards.js';
-import { Card as CardClass } from '../data/card-class.js';
+// import { addToCard, calculateCartQuantity } from '../data/cards.js';
+import { card } from '../data/card.js';
 
 // display the products onto the page.
 const displayProducts = document.getElementById('js-products-grid');
@@ -65,7 +65,7 @@ window.addEventListener('load', updateCardQuantity());
 
 function updateCardQuantity() {
   document.querySelector('.js-card-quantity')
-    .textContent = calculateCartQuantity();
+    .textContent = card.calculateCartQuantity();
 }
 
 
@@ -73,7 +73,7 @@ function updateCardQuantity() {
 document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
   button.addEventListener('click', () => {
     const productId = button.dataset.productId;
-    addToCard(productId);
-    updateCardQuantity()
+    card.addToCard(productId);
+    updateCardQuantity();
   });
 });
