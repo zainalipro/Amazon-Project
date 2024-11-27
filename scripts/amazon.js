@@ -1,7 +1,6 @@
 import { products } from '../data/products.js';
 import { addToCard, calculateCartQuantity } from '../data/cards.js';
-// import { Card } from '../data/card-class.js';
-import { formatCurrency } from './utils/money.js';
+import { Card as CardClass } from '../data/card-class.js';
 
 // display the products onto the page.
 const displayProducts = document.getElementById('js-products-grid');

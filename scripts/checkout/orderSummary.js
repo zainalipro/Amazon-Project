@@ -5,8 +5,9 @@ import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 import renderPaymentSummary from "./paymentSummary.js";
-import { calculateDeliveryDate } from "../../data/deliveryOptions.js"
+import { calculateDeliveryDate } from "../../data/deliveryOptions.js";
 
+import { Card as CardClass } from '../../data/card-class.js';
 
 export default function renderOrderSummary() {
     // Start generating the HTML on the page

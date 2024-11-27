@@ -1,11 +1,15 @@
 import { formatCurrency } from "../scripts/utils/money.js";
+
+// product class 
 class Product {
+  // product class properties
   id;
   image;
   name;
   rating;
   priceCents;
 
+  // product class initialization. 
   constructor(productDetails) {
     this.id = productDetails.id;
     this.image = productDetails.image;
@@ -14,6 +18,7 @@ class Product {
     this.priceCents = productDetails.priceCents;
   }
 
+  // product class methods
   getStarsUrl() {
     return `images/ratings/rating-${(this.rating.stars) * 10}.png`
   }
@@ -25,6 +30,7 @@ class Product {
   }
 }
 
+// clothing class.
 class Clothing extends Product {
   sizeChartLink;
   constructor(productDetails) {
@@ -39,6 +45,30 @@ class Clothing extends Product {
       </a>
     `;
   }
+}
+
+// appliances class.
+class Appliance extends Product {
+  instructionLink;
+  warrantyLink;
+
+  constructor(productDetails) {
+    super(productDetails);
+    this.instructionLink = productDetails.instructionLink;
+    this.warrantyLink = productDetails.warrantyLink;
+  }
+
+  extraInfoHtml() {
+    return `
+    <a href="${this.instructionLink}" target="_blank">
+      Instructions
+    </a>
+    <a href="${this.warrantyLink}" target="_blank">
+        Warranty
+      </a>
+  `;
+  }
+
 }
 
 export const products = [
@@ -97,6 +127,9 @@ export const products = [
       count: 2197
     },
     priceCents: 1899,
+    type: 'appliance',
+    instructionLink: '../images/appliance-warranty.png',
+    warrantyLink: '../images/appliance-warranty.png',
     keywords: [
       "toaster",
       "kitchen",
@@ -282,6 +315,9 @@ export const products = [
       count: 846
     },
     priceCents: 3074,
+    type: 'appliance',
+    instructionLink: '../images/appliance-warranty.png',
+    warrantyLink: '../images/appliance-warranty.png',
     keywords: [
       "water boiler",
       "appliances",
@@ -587,6 +623,9 @@ export const products = [
       count: 1211
     },
     priceCents: 2250,
+    type: 'appliance',
+    instructionLink: '../images/appliance-warranty.png',
+    warrantyLink: '../images/appliance-warranty.png',
     keywords: [
       "coffeemakers",
       "kitchen",
@@ -647,6 +686,9 @@ export const products = [
       count: 3
     },
     priceCents: 10747,
+    type: 'appliance',
+    instructionLink: '../images/appliance-warranty.png',
+    warrantyLink: '../images/appliance-warranty.png',
     keywords: [
       "food blenders",
       "kitchen",
@@ -703,8 +745,11 @@ export const products = [
 ].map((productDetails) => {
   if (productDetails.type === 'clothing') {
     return new Clothing(productDetails);
+  } else if (productDetails.type === 'appliance') {
+    return new Appliance(productDetails);
+  } else {
+    return new Product(productDetails);
   }
-  return new Product(productDetails);
 });
 
 
@@ -718,30 +763,3 @@ export function getProduct(productId) {
   });
   return matchingProduct;
 }
-/*
-// Built in classes like Date()
-const date = new Date();
-console.log(date);
-console.log(date.toLocaleTimeString());
-*/
-
-// Use of this keyword
-// outside the object the this is undefined
-/*
-console.log(this);
-function logThis() {
-  console.log(this);
-}
-logThis();
-*/
-// Inside the object the this is the object
-/* 
-const person = {
-  name: 'John',
-  age: 30,
-  logThis: function () {
-    console.log(this);
-  }
-}
-console.log(person.name)
-person.logThis();*/
