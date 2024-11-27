@@ -735,6 +735,7 @@ function logThis() {
 logThis();
 */
 // Inside the object the this is the object
+/* 
 const person = {
   name: 'John',
   age: 30,
@@ -743,4 +744,4 @@ const person = {
   }
 }
 console.log(person.name)
-person.logThis();
+person.logThis();*/
