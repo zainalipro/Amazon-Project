@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Practice</title>
+</head>
+
+<body>
+    <h1>Backend Practice</h1>
+    <div id="display-response"></div>
+    <script>
+        const xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('load', () => {
+            // console.log(xhr.response);
+            const displayResponse = document.getElementById('display-response');
+            displayResponse.innerHTML = xhr.response;
+        });
+
+        xhr.open('GET', 'https://supersimplebackend.dev/');
+        xhr.send();
+    </script>
+</body>
+
+</html>
