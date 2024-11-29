@@ -1,3 +1,4 @@
+import { card } from "../../data/card.js";
 export default function renderCheckoutHeader() {
     const headerHtml = `
     <div class="header-content">
@@ -9,7 +10,7 @@ export default function renderCheckoutHeader() {
         </div>
 
         <div class="checkout-header-middle-section">
-            Checkout (<a class="return-to-home-link js-return-to-home-link" href="amazon.html"></a>)
+            Checkout (<a class="return-to-home-link js-return-to-home-link" href="amazon.html">${card.calculateCartQuantity()}</a>)
         </div>
 
         <div class="checkout-header-right-section">

@@ -82,3 +82,35 @@ class Card {
 
 const card = new Card('card');
 export { card };
+
+/*
+export function loadCard(fun) {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', () => {
+        console.log(xhr.response);
+    });
+    xhr.open('GET', 'https://supersimplebackend.dev/cart');
+    xhr.send();
+}
+*/
+export function loadCard(fun) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            console.log(xhr.response);
+            if (fun) {
+                fun(xhr.response); // Call the provided function with the response if it exists
+            }
+        } else {
+            console.error(`Error: ${xhr.status} - ${xhr.statusText}`);
+        }
+    });
+
+    xhr.addEventListener('error', () => {
+        console.error('Request failed.');
+    });
+
+    xhr.open('GET', 'https://supersimplebackend.dev/cart');
+    xhr.send();
+}
