@@ -1,14 +1,16 @@
-import { products } from '../data/products.js';
+import { products, loadProducts } from '../data/products.js';
 // import { addToCard, calculateCartQuantity } from '../data/cards.js';
 import { card } from '../data/card.js';
 
+loadProducts(renderProductsGrid);
 // display the products onto the page.
 const displayProducts = document.getElementById('js-products-grid');
+function renderProductsGrid() {
 
-let productsHTML = '';
-// load the  products from the file products.js
-products.forEach((product) => {
-  productsHTML += `
+  let productsHTML = '';
+  // load the  products from the file products.js
+  products.forEach((product) => {
+    productsHTML += `
                 <div class="product-container">
               <div class="product-image-container">
                 <img class="product-image" src="${product.image}">
@@ -58,22 +60,23 @@ products.forEach((product) => {
               </button>
             </div>
           `;
-});
-
-displayProducts.innerHTML = productsHTML;
-window.addEventListener('load', updateCardQuantity());
-
-function updateCardQuantity() {
-  document.querySelector('.js-card-quantity')
-    .textContent = card.calculateCartQuantity();
-}
-
-
-// button click event listener
-document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
-  button.addEventListener('click', () => {
-    const productId = button.dataset.productId;
-    card.addToCard(productId);
-    updateCardQuantity();
   });
-});
+
+  displayProducts.innerHTML = productsHTML;
+  window.addEventListener('load', updateCardQuantity());
+
+  function updateCardQuantity() {
+    document.querySelector('.js-card-quantity')
+      .textContent = card.calculateCartQuantity();
+  }
+
+
+  // button click event listener
+  document.querySelectorAll('.js-add-to-card-button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const productId = button.dataset.productId;
+      card.addToCard(productId);
+      updateCardQuantity();
+    });
+  });
+}
