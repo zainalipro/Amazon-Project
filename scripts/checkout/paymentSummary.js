@@ -5,15 +5,16 @@ Steps to solve the problem in JS which is also called MVC
 3. Make it Interactive (Controller)
 */
 // import { card, calculateCartQuantity } from "../../data/cards.js";
-import { card } from "../../data/card.js";
+import { card as cart } from "../../data/card.js";
 import { getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
+import { addOrder } from "../../data/orders.js";
 
 export default function renderPaymentSummary() {
   let productPriceCents = 0;
   let shippingPriceCents = 0;
-  card.cardItems.forEach((cartItem) => {
+  cart.cardItems.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
     productPriceCents += product.priceCents * cartItem.quantity;
     const charges = getDeliveryOption(Number(cartItem.deliveryOptionId));
@@ -28,7 +29,7 @@ export default function renderPaymentSummary() {
           Order Summary
         </div>
         <div class="payment-summary-row">
-          <div>Items (${card.calculateCartQuantity()}):</div>
+          <div>Items (${cart.calculateCartQuantity()}):</div>
           <div class="payment-summary-money">
             ${formatCurrency(productPriceCents)}
           </div>
@@ -62,11 +63,36 @@ export default function renderPaymentSummary() {
           </div>
         </div>
 
-        <button class="place-order-button button-primary">
+        <button class="place-order-button button-primary js-place-order">
           Place your order
         </button>
     `;
   document.querySelector('.js-payment-summary')
     .innerHTML = paymentSummaryHTML;
 
+  document.querySelector('.js-place-order')
+    .addEventListener('click', async () => {
+      try {
+        // const cartData = cart.cardItems;
+        const cartData = cart.cardItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          deliveryOptionId: String(item.deliveryOptionId), // Ensure deliveryOptionId is a string
+        }));
+        const response = await fetch('https://supersimplebackend.dev/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cart: cartData
+          })
+        });
+        const order = await response.json();
+        addOrder(order);
+      } catch (error) {
+        console.log('unexpected error ' + error);
+      }
+      window.location.href = './orders.html';
+    });
 }
