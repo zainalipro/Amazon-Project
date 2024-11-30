@@ -1,7 +1,7 @@
 // Importing the necessary files 
 // import { card, removeFromCard, saveToStorage, calculateCartQuantity, updateQuantity, updateDeliveryOption, removeCardItems } from '../../data/cards.js';
 import { card } from '../../data/card.js';
-import { products, getProduct } from '../../data/products.js';
+import { getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.13/+esm';
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";

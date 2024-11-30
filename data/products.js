@@ -1,7 +1,7 @@
 import { formatCurrency } from "../scripts/utils/money.js";
 
 // product class 
-class Product {
+export class Product {
   // product class properties
   id;
   image;
@@ -25,9 +25,15 @@ class Product {
   getPrice() {
     return formatCurrency(this.priceCents);
   }
+
   extraInfoHtml() {
     return '';
   }
+  /*
+  static getProduct(productId, products) {
+    return products.find((product) => productId === product.id) || null;// Return null if no match found
+  }
+  */
 }
 
 // clothing class.
@@ -74,6 +80,21 @@ class Appliance extends Product {
 }
 
 export let products = [];
+
+// function to get get 
+export function getProduct(productId) {
+  /*
+  let matchingProduct;
+  // Check for matching product
+  products.forEach((product) => {
+    if (product.id === productId) {
+      matchingProduct = product;
+    }
+  });
+    return matchingProduct;
+  */
+  return products.find((product) => productId === product.id) || null;// Return null if no match found
+}
 
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
@@ -797,14 +818,3 @@ export const products = [
   }
 });
  */
-
-export function getProduct(productId) {
-  let matchingProduct;
-  // Check for matching product
-  products.forEach((product) => {
-    if (product.id === productId) {
-      matchingProduct = product;
-    }
-  });
-  return matchingProduct;
-}

@@ -56,7 +56,7 @@ Promise.all([
     paymentSummary();
 });
 */
-
+/*
 // Method 4: load products with fetch;
 Promise.all([
     loadProductsFetch(),
@@ -70,3 +70,23 @@ Promise.all([
     orderSummary();
     paymentSummary();
 });
+*/
+// Method 5: use of async and await 
+async function loadPage() {
+    console.log('load page');
+
+    await loadProductsFetch();
+
+    await new Promise((resolve) => {
+        loadCard(() => {
+            resolve();
+        });
+    });
+    console.log('don it');
+    // render the page
+    renderCheckoutHeader();
+    orderSummary();
+    paymentSummary();
+}
+
+loadPage();
