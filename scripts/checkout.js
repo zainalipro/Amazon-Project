@@ -73,20 +73,22 @@ Promise.all([
 */
 // Method 5: use of async and await 
 async function loadPage() {
-    console.log('load page');
+    try {
+        await loadProductsFetch();
 
-    await loadProductsFetch();
-
-    await new Promise((resolve) => {
-        loadCard(() => {
-            resolve();
+        await new Promise((resolve) => {
+            loadCard(() => {
+                resolve();
+            });
         });
-    });
-    console.log('don it');
-    // render the page
-    renderCheckoutHeader();
-    orderSummary();
-    paymentSummary();
+        // render the page
+        renderCheckoutHeader();
+        orderSummary();
+        paymentSummary();
+    } catch (error) {
+        console.log('sorry this thing is not run due the following error' + error);
+
+    }
 }
 
 loadPage();
