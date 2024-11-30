@@ -54,8 +54,10 @@ class Appliance extends Product {
 
   constructor(productDetails) {
     super(productDetails);
-    this.instructionLink = productDetails.instructionLink;
-    this.warrantyLink = productDetails.warrantyLink;
+    // this.instructionLink = productDetails.instructionLink;
+    // this.warrantyLink = productDetails.warrantyLink;
+    this.instructionLink = '../images/appliance-instructions.png';
+    this.warrantyLink = '../images/appliance-warranty.png';
   }
 
   extraInfoHtml() {
@@ -80,7 +82,7 @@ export function loadProducts(fun) {
     products = JSON.parse(xhr.response).map((productDetails) => {
       if (productDetails.type === 'clothing') {
         return new Clothing(productDetails);
-      } else if (productDetails.type === 'appliance') {
+      } else if (productDetails.keywords.includes('appliances')) {
         return new Appliance(productDetails);
       } else {
         return new Product(productDetails);
@@ -93,8 +95,27 @@ export function loadProducts(fun) {
   xhr.send();
 }
 
-/*
+export function loadProductsFetch() {
+  const promise = fetch('https://supersimplebackend.dev/products')
+    .then((response) => {
+      return response.json();
+    })
+    .then((productsData) => {
+      products = productsData.map((productDetails) => {
+        if (productDetails.type === 'clothing') {
+          return new Clothing(productDetails);
+        } else if (productDetails.keywords.includes('appliances')) {
+          return new Appliance(productDetails);
+        } else {
+          return new Product(productDetails);
+        }
+      });
+      console.log('load products');
+    });
+  return promise;
+}
 
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",

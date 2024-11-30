@@ -1,7 +1,7 @@
 import orderSummary from "./checkout/orderSummary.js";
 import paymentSummary from "./checkout/paymentSummary.js";
 import renderCheckoutHeader from "./checkout/checkoutHeader.js";
-import { loadProducts } from "../data/products.js";
+import { loadProducts, loadProductsFetch } from "../data/products.js";
 // import '../data/car.js';
 import { loadCard } from '../data/card.js';
 
@@ -37,8 +37,7 @@ new Promise((resolve) => {
 });
 */
 
-
-
+/*
 // Method 3: load products and cart in parallel
 Promise.all([
     new Promise((resolve) => {
@@ -52,7 +51,21 @@ Promise.all([
         });
     }),
 ]).then((values) => {
-    console.log(values);
+    renderCheckoutHeader();
+    orderSummary();
+    paymentSummary();
+});
+*/
+
+// Method 4: load products with fetch;
+Promise.all([
+    loadProductsFetch(),
+    new Promise((resolve) => {
+        loadCard(() => {
+            resolve();
+        });
+    }),
+]).then(() => {
     renderCheckoutHeader();
     orderSummary();
     paymentSummary();
